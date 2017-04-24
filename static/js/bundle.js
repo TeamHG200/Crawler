@@ -58,7 +58,8 @@
 	var app = new Vue({
 	  el: "#wrapper",
 	  components: {
-	    'crawler': __webpack_require__(311)
+	    'crawler': __webpack_require__(311),
+	    'spliter': __webpack_require__(314)
 	  },
 	  data: function data() {
 	    return {
@@ -66263,11 +66264,11 @@
 	//                 </div>
 	//                 <div class="modal-body">
 	//                   <div class="form-group">
-	//                     <input class="form-control" placeholder="game id" v-model="project"></input>
+	//                     <input class="form-control" placeholder="game id" v-model="game_id"></input>
 	//                   </div>
 	//                 </div>
 	//                 <div class="modal-footer">
-	//                     <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="addProject()">抓取</button>
+	//                     <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="crawler()">抓取</button>
 	//                 </div>
 	//             </div><!-- /.modal-content -->
 	//         </div><!-- /.modal -->
@@ -66275,58 +66276,53 @@
 	//
 	//
 	//   <div class="panel-heading">
-	//     <i class="fa fa-github-square fa-fw" style="margin-right:5px"></i>Search Planner
-	//
+	//     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 评论
 	//     <button class="btn btn-success btn-circle pull-right" data-toggle="modal" data-target="#myModalNewGameReview" >
 	//        <i class="fa fa-plus fa-fw"></i>
 	//     </button>
 	//   </div>
+	//
 	//   <!-- /.panel-heading -->
+	//
 	//   <div v-if="status !=''" class="panel-body" style="min-height:190px" id="all_projects">
 	//     <div class="fill">
 	//         <h2 class="text-center">{{ status }}</h2>
 	//     </div>
 	//   </div>
-	//
 	//   <div v-if="status == ''" class="panel-body" id="all_projects">
-	//     <div class="list-group">
-	//          <li class="list-group-item" v-for="repo in repos">
-	//               <h4 class="list-group-item-heading">
-	//                   <i class="fa fa-code-fork fa-fw"></i>
-	//                   {{ repo.name }}
-	//                   <small>{{ repo.desc }}</small>
-	//
-	//                    <button class="btn btn-primary btn-circle pull-right" data-toggle="modal" data-target="#myModal" v-on:click="selectRepo(repo.repo)">
-	//                      <i class="fa fa-plus fa-fw"></i>
-	//                    </button>
-	//               </h4>
-	//               <small class="list-group-item-text">
-	//                  {{ repo.repo }}
-	//               </small>
-	//          </li>
-	//     </div>
-	//
-	//     <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	//         <div class="modal-dialog">
-	//             <div class="modal-content">
-	//                 <div class="modal-header">
-	//                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	//                     <h4 class="modal-title" id="myModalLabel">
-	//                         创建 {{ repository }} 的分支
-	//                     </h4>
-	//                 </div>
-	//                 <div class="modal-body">
-	//                     <input class="form-control" placeholder="branch name..." v-model="branch"></input>
-	//                 </div>
-	//                 <div class="modal-footer">
-	//                     <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="createBranch">创建</button>
-	//                 </div>
-	//             </div><!-- /.modal-content -->
-	//         </div><!-- /.modal -->
-	//     </div>
-	//
-	//
+	//     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+	//       <thead>
+	//         <tr>
+	//          <th>ID</th>
+	//          <th>Game</th>
+	//          <th>Reviews</th>
+	//          <th width="30px">Useful</th>
+	//         </tr>
+	//       </thead>
+	//       <tbody>
+	//         <tr class="odd gradeX" v-for="review in reviews">
+	//           <td>{{ review.review_id }}</td>
+	//           <td>{{ review.game_id }}</td>
+	//           <td>{{ review.text }}</td>
+	//           <td>
+	//              <button v-if="review.score==0||review.score==1" class="btn btn-outline btn-primary btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评">
+	//                <i class="fa  fa-thumbs-o-down fa-fw"></i>
+	//              </button>
+	//              <button v-if="review.score==2" class="btn btn-success btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评">
+	//                <i class="fa  fa-thumbs-o-down fa-fw"></i>
+	//              </button>
+	//              <button v-if="review.score==0||review.score==2" class="btn btn-outline btn-primary btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评">
+	//                <i class="fa  fa-thumbs-o-up fa-fw"></i>
+	//              </button>
+	//              <button v-if="review.score==1" class="btn btn-success btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评">
+	//                <i class="fa  fa-thumbs-o-up fa-fw"></i>
+	//              </button>
+	//           </td>
+	//         </tr>
+	//       </tbody>
+	//     </table>
 	//   </div>
+	//
 	// </div>
 	//
 	// </template>
@@ -66339,74 +66335,60 @@
 	    },
 	    data: function data() {
 	        return {
-	            repos: [],
-	            project: "",
-	            password: "",
-	            description: "",
+	            reviews: [],
+	            game_id: "",
 	            status: "",
-	            repository: "",
-	            username: "",
-	            branch: "" };
+	            review_count: 0,
+	            pages: []
+	        };
 	    },
 	    created: function created() {
-	        this.$data.status = "正在载入...";
-	        this.$data.username = this.user;
-	        this.$http.get("/api/all_projects", {
-	            params: {
-	                username: this.$data.username
-	            } }).then(function (resp) {
-	            var data = resp_check(resp.data);
-	            if (data) {
-	                this.$data.repos = data;
-	                this.$data.status = "";
-	            }
-	        }, function () {
-	            alert("网络不通");
-	        });
+	        this.reload_view();
 	    },
 	    methods: {
 
-	        selectRepo: function selectRepo(repo) {
-	            this.$data.repository = repo;
-	        },
-
-	        addProject: function addProject() {
-
-	            this.$data.status = "正在创建...";
-	            this.$http.post("/api/new_project", {
-	                username: this.$data.username,
-	                password: this.$data.password,
-	                description: encodeURI(this.$data.description),
-	                project: this.$data.project
-	            }).then(function (resp) {
-	                var data = resp_check(resp.data);
+	        reload_view: function reload_view() {
+	            this.$data.status = "正在载入...";
+	            this.$http.get("/review_count", {
+	                params: {} }).then(function (resp) {
+	                var data = resp.data;
 	                if (data) {
-	                    this.$data.status = "";
-	                    window.location.href = "/";
+	                    this.$data.review_count = data.count;
+	                    this.show_review();
 	                }
 	            }, function () {
 	                alert("网络不通");
 	            });
 	        },
 
-	        createBranch: function createBranch() {
-
-	            this.$data.status = "正在创建...";
-	            this.$http.post("/api/new_branch", {
-	                username: this.$data.username,
-	                repository: this.$data.repository,
-	                branch: this.$data.branch
-	            }).then(function (resp) {
-	                var data = resp_check(resp.data);
+	        show_review: function show_review() {
+	            this.$http.get("/reviews", {
+	                params: {
+	                    s: "0",
+	                    n: this.$data.review_count
+	                } }).then(function (resp) {
+	                var data = resp.data;
 	                if (data) {
-	                    var url = "/editor?username=" + this.$data.username + "&repository=" + this.$data.repository.replace('/', '%2F') + "&branch=" + this.$data.branch;
-	                    window.location.href = url;
 	                    this.$data.status = "";
+	                    this.$data.reviews = data;
 	                }
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        },
+
+	        crawler: function crawler() {
+	            this.$data.status = "正在抓取中...";
+	            this.$http.get("/crawler", {
+	                params: {
+	                    gid: this.$data.game_id
+	                } }).then(function (resp) {
+	                this.reload_view();
 	            }, function () {
 	                alert("网络不通");
 	            });
 	        }
+
 	    }
 
 	};
@@ -66418,7 +66400,138 @@
 /* 313 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n\n\n<!-- create -->\n    <div class=\"modal fade\" id=\"myModalNewGameReview\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal-dialog\">\n            <div class=\"modal-content\">\n                <div class=\"modal-header\">\n                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n                    <h4 class=\"modal-title\" id=\"myModalLabel\">\n                        新建抓取\n                    </h4>\n                </div>\n                <div class=\"modal-body\">\n                  <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"game id\" v-model=\"project\"></input>\n                  </div>\n                </div>\n                <div class=\"modal-footer\">\n                    <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" v-on:click=\"addProject()\">抓取</button>\n                </div>\n            </div><!-- /.modal-content -->\n        </div><!-- /.modal -->\n    </div>\n\n\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-github-square fa-fw\" style=\"margin-right:5px\"></i>Search Planner\n\n    <button class=\"btn btn-success btn-circle pull-right\" data-toggle=\"modal\" data-target=\"#myModalNewGameReview\" >\n       <i class=\"fa fa-plus fa-fw\"></i>\n    </button>\n  </div>\n  <!-- /.panel-heading -->\n  <div v-if=\"status !=''\" class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n    <div class=\"fill\">\n        <h2 class=\"text-center\">{{ status }}</h2>\n    </div>\n  </div>\n\n  <div v-if=\"status == ''\" class=\"panel-body\" id=\"all_projects\">\n    <div class=\"list-group\">\n         <li class=\"list-group-item\" v-for=\"repo in repos\">\n              <h4 class=\"list-group-item-heading\">\n                  <i class=\"fa fa-code-fork fa-fw\"></i>\n                  {{ repo.name }}\n                  <small>{{ repo.desc }}</small>\n\n                   <button class=\"btn btn-primary btn-circle pull-right\" data-toggle=\"modal\" data-target=\"#myModal\" v-on:click=\"selectRepo(repo.repo)\">\n                     <i class=\"fa fa-plus fa-fw\"></i>\n                   </button>\n              </h4>\n              <small class=\"list-group-item-text\">\n                 {{ repo.repo }}\n              </small>\n         </li>\n    </div>\n\n    <div class=\"modal fade\" id=\"myModal\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal-dialog\">\n            <div class=\"modal-content\">\n                <div class=\"modal-header\">\n                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n                    <h4 class=\"modal-title\" id=\"myModalLabel\">\n                        创建 {{ repository }} 的分支\n                    </h4>\n                </div>\n                <div class=\"modal-body\">\n                    <input class=\"form-control\" placeholder=\"branch name...\" v-model=\"branch\"></input>\n                </div>\n                <div class=\"modal-footer\">\n                    <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" v-on:click=\"createBranch\">创建</button>\n                </div>\n            </div><!-- /.modal-content -->\n        </div><!-- /.modal -->\n    </div>\n\n\n  </div>\n</div>\n\n";
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n\n\n<!-- create -->\n    <div class=\"modal fade\" id=\"myModalNewGameReview\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal-dialog\">\n            <div class=\"modal-content\">\n                <div class=\"modal-header\">\n                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n                    <h4 class=\"modal-title\" id=\"myModalLabel\">\n                        新建抓取\n                    </h4>\n                </div>\n                <div class=\"modal-body\">\n                  <div class=\"form-group\">\n                    <input class=\"form-control\" placeholder=\"game id\" v-model=\"game_id\"></input>\n                  </div>\n                </div>\n                <div class=\"modal-footer\">\n                    <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" v-on:click=\"crawler()\">抓取</button>\n                </div>\n            </div><!-- /.modal-content -->\n        </div><!-- /.modal -->\n    </div>\n\n\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 评论\n    <button class=\"btn btn-success btn-circle pull-right\" data-toggle=\"modal\" data-target=\"#myModalNewGameReview\" >\n       <i class=\"fa fa-plus fa-fw\"></i>\n    </button>\n  </div>\n\n  <!-- /.panel-heading -->\n\n  <div v-if=\"status !=''\" class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n    <div class=\"fill\">\n        <h2 class=\"text-center\">{{ status }}</h2>\n    </div>\n  </div>\n  <div v-if=\"status == ''\" class=\"panel-body\" id=\"all_projects\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example\">\n      <thead>\n        <tr>\n         <th>ID</th>\n         <th>Game</th>\n         <th>Reviews</th>\n         <th width=\"30px\">Useful</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\" v-for=\"review in reviews\">\n          <td>{{ review.review_id }}</td>\n          <td>{{ review.game_id }}</td>\n          <td>{{ review.text }}</td>\n          <td>\n             <button v-if=\"review.score==0||review.score==1\" class=\"btn btn-outline btn-primary btn-circle pull-right\" style=\"margin-top:0px;margin-left:2px\" data-toggle=\"popover\" data-placement=\"top\" data-content=\"差评\">\n               <i class=\"fa  fa-thumbs-o-down fa-fw\"></i>\n             </button>\n             <button v-if=\"review.score==2\" class=\"btn btn-success btn-circle pull-right\" style=\"margin-top:0px;margin-left:2px\" data-toggle=\"popover\" data-placement=\"top\" data-content=\"差评\">\n               <i class=\"fa  fa-thumbs-o-down fa-fw\"></i>\n             </button>\n             <button v-if=\"review.score==0||review.score==2\" class=\"btn btn-outline btn-primary btn-circle pull-right\" data-toggle=\"popover\" data-placement=\"top\" data-content=\"好评\">\n               <i class=\"fa  fa-thumbs-o-up fa-fw\"></i>\n             </button>\n             <button v-if=\"review.score==1\" class=\"btn btn-success btn-circle pull-right\" data-toggle=\"popover\" data-placement=\"top\" data-content=\"好评\">\n               <i class=\"fa  fa-thumbs-o-up fa-fw\"></i>\n             </button>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
+
+/***/ },
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	__vue_script__ = __webpack_require__(315)
+	__vue_template__ = __webpack_require__(316)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), true)
+	  if (!hotAPI.compatible) return
+	  var id = "/Users/zen/Workspace/src/crawler/app/spliter.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 315 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	// <template>
+	//
+	// <div class="panel panel-default"  name="search-planner-group">
+	//
+	//
+	//   <div class="panel-heading">
+	//     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 分词
+	//     <button class="btn btn-success btn-circle pull-right" v-on:click="spliter()">
+	//        <i class="fa fa-check fa-fw"></i>
+	//     </button>
+	//   </div>
+	//
+	//   <!-- /.panel-heading -->
+	//
+	//   <div v-if="status !=''" class="panel-body" style="min-height:190px" id="all_projects">
+	//     <div class="fill">
+	//         <h2 class="text-center">{{ status }}</h2>
+	//     </div>
+	//   </div>
+	//   <div v-if="status == ''" class="panel-body" id="all_projects">
+	//     <table width="100%" class="table table-striped table-bordered table-hover">
+	//       <thead>
+	//         <tr>
+	//          <th>ID</th>
+	//          <th>Game</th>
+	//          <th>Words</th>
+	//         </tr>
+	//       </thead>
+	//       <tbody>
+	//         <tr class="odd gradeX" v-for="word in words">
+	//           <td>{{ word.review_id }}</td>
+	//           <td>{{ word.game_id }}</td>
+	//           <td>
+	//                <ul>
+	//                  <li v-for="w in word.words"> {{ w[0] }} / {{ w[1] }}</li>
+	//                </ul>
+	//           </td>
+	//         </tr>
+	//       </tbody>
+	//     </table>
+	//   </div>
+	//
+	// </div>
+	//
+	// </template>
+	//
+	// <script>
+
+	exports.default = {
+	    props: {
+	        user: String
+	    },
+	    data: function data() {
+	        return {
+	            words: [],
+	            game_id: "",
+	            status: "",
+	            review_count: 0,
+	            pages: []
+	        };
+	    },
+	    created: function created() {},
+	    methods: {
+
+	        show_words: function show_words() {
+	            this.$http.get("/words", {
+	                params: {} }).then(function (resp) {
+	                var data = resp.data;
+	                if (data) {
+	                    this.$data.status = "";
+	                    this.$data.words = data;
+	                }
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        },
+
+	        spliter: function spliter() {
+	            this.$data.status = "正在分词提取...";
+	            this.$http.get("/split", {
+	                params: {} }).then(function (resp) {
+	                this.show_words();
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        }
+
+	    }
+
+	};
+
+	// </script>
+	//
+
+/***/ },
+/* 316 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n\n\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 分词\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"spliter()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <!-- /.panel-heading -->\n\n  <div v-if=\"status !=''\" class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n    <div class=\"fill\">\n        <h2 class=\"text-center\">{{ status }}</h2>\n    </div>\n  </div>\n  <div v-if=\"status == ''\" class=\"panel-body\" id=\"all_projects\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\">\n      <thead>\n        <tr>\n         <th>ID</th>\n         <th>Game</th>\n         <th>Words</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\" v-for=\"word in words\">\n          <td>{{ word.review_id }}</td>\n          <td>{{ word.game_id }}</td>\n          <td>\n               <ul>\n                 <li v-for=\"w in word.words\"> {{ w[0] }} / {{ w[1] }}</li>\n               </ul>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
 
 /***/ }
 /******/ ]);

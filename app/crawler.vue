@@ -15,11 +15,11 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                    <input class="form-control" placeholder="game id" v-model="project"></input>
+                    <input class="form-control" placeholder="game id" v-model="game_id"></input>
                   </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="addProject()">抓取</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="crawler()">抓取</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -27,58 +27,53 @@
 
 
   <div class="panel-heading">
-    <i class="fa fa-github-square fa-fw" style="margin-right:5px"></i>Search Planner
-
+    <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 评论
     <button class="btn btn-success btn-circle pull-right" data-toggle="modal" data-target="#myModalNewGameReview" >
        <i class="fa fa-plus fa-fw"></i>
     </button>
   </div>
+
   <!-- /.panel-heading -->
+
   <div v-if="status !=''" class="panel-body" style="min-height:190px" id="all_projects">
     <div class="fill">
         <h2 class="text-center">{{ status }}</h2>
     </div>
   </div>
-
   <div v-if="status == ''" class="panel-body" id="all_projects">
-    <div class="list-group">
-         <li class="list-group-item" v-for="repo in repos">
-              <h4 class="list-group-item-heading">
-                  <i class="fa fa-code-fork fa-fw"></i>
-                  {{ repo.name }}
-                  <small>{{ repo.desc }}</small>
-
-                   <button class="btn btn-primary btn-circle pull-right" data-toggle="modal" data-target="#myModal" v-on:click="selectRepo(repo.repo)">
-                     <i class="fa fa-plus fa-fw"></i>
-                   </button>
-              </h4>
-              <small class="list-group-item-text">
-                 {{ repo.repo }}
-              </small>
-         </li>
-    </div>
-
-    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        创建 {{ repository }} 的分支
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <input class="form-control" placeholder="branch name..." v-model="branch"></input>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="createBranch">创建</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-
-
+    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+      <thead>
+        <tr>
+         <th>ID</th>
+         <th>Game</th>
+         <th>Reviews</th>
+         <th width="30px">Useful</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="odd gradeX" v-for="review in reviews">
+          <td>{{ review.review_id }}</td>
+          <td>{{ review.game_id }}</td>
+          <td>{{ review.text }}</td>
+          <td>
+             <button v-if="review.score==0||review.score==1" class="btn btn-outline btn-primary btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评">
+               <i class="fa  fa-thumbs-o-down fa-fw"></i>
+             </button>
+             <button v-if="review.score==2" class="btn btn-success btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评">
+               <i class="fa  fa-thumbs-o-down fa-fw"></i>
+             </button>
+             <button v-if="review.score==0||review.score==2" class="btn btn-outline btn-primary btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评">
+               <i class="fa  fa-thumbs-o-up fa-fw"></i>
+             </button>
+             <button v-if="review.score==1" class="btn btn-success btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评">
+               <i class="fa  fa-thumbs-o-up fa-fw"></i>
+             </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
 </div>
 
 </template>
@@ -91,79 +86,65 @@ export default{
     },
     data: function() {
         return {
-        repos : [],
-        project : "",
-        password: "",
-        description: "",
-        status: "",
-        repository: "",
-        username: "",
-        branch: "" }
+            reviews: [],
+            game_id : "",
+            status : "",
+            review_count : 0,
+            pages: [],
+        }
     },
     created:function(){
-        this.$data.status = "正在载入..."
-        this.$data.username = this.user
-        this.$http.get("/api/all_projects",{
-                  params: {
-                      username: this.$data.username
-                  }})
+        this.reload_view()
+    },
+    methods: {
+
+        reload_view:function() {
+            this.$data.status = "正在载入..."
+            this.$http.get("/review_count",{
+                params: {
+                }})
                 .then(function (resp) {
-                    var data = resp_check(resp.data)
+                    var data = resp.data
                     if(data) {
-                        this.$data.repos = data
-                        this.$data.status = ""
+                        this.$data.review_count = data.count
+                        this.show_review()
                     }
                 },function(){
                     alert("网络不通")
                 })
-    },
-    methods: {
-
-        selectRepo: function(repo) {
-            this.$data.repository = repo
         },
 
-        addProject: function() {
-
-            this.$data.status = "正在创建..."
-            this.$http.post("/api/new_project", {
-                      username: this.$data.username,
-                      password: this.$data.password,
-                      description: encodeURI(this.$data.description),
-                      project: this.$data.project
-                    })
-                    .then(function (resp) {
-                        var data =resp_check(resp.data)
-                        if(data) {
-                            this.$data.status = ""
-                            window.location.href = "/"
-                        }
-                    },function(){
-                        alert("网络不通")
-            })
+        show_review:function() {
+            this.$http.get("/reviews",{
+                params: {
+                    s: "0",
+                    n: this.$data.review_count
+                }})
+                .then(function (resp) {
+                    var data = resp.data
+                    if(data) {
+                        this.$data.status = ""
+                        this.$data.reviews = data
+                    }
+                },function(){
+                    alert("网络不通")
+                })
 
         },
 
-        createBranch: function() {
-
-            this.$data.status = "正在创建..."
-            this.$http.post("/api/new_branch", {
-                      username: this.$data.username,
-                      repository: this.$data.repository,
-                      branch: this.$data.branch
-                    })
-                    .then(function (resp) {
-                        var data =resp_check(resp.data)
-                        if(data) {
-                            var url = "/editor?username=" + this.$data.username + "&repository=" + this.$data.repository.replace('/', '%2F') + "&branch="  + this.$data.branch
-                            window.location.href = url
-                            this.$data.status = ""
-                        }
-                    },function(){
-                        alert("网络不通")
-            })
-
+        crawler:function() {
+            this.$data.status = "正在抓取中..."
+            this.$http.get("/crawler",{
+                params: {
+                    gid: this.$data.game_id
+                }})
+                .then(function (resp) {
+                    this.reload_view()
+                },function(){
+                    alert("网络不通")
+                })
         }
+
     }
 
 }

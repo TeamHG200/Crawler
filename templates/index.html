@@ -18,9 +18,9 @@
         <p>阿夸机器学习(基于支持向量机的)情感分析器</p>
         <h3>系统模块:</h3>
         <p> 1. 评论抓取系统: 给定游戏ID固定爬取10页评论数据 </p>
-        <p> 2. 分词与情感提取: 基于JIEBA分词和NTUSD情感辞典的特征提取 </p>
+        <p> 2. 分词与情感提取: 基于 <a>JIEBA</a> 分词和 <a>NTUSD</a> 情感辞典的特征提取 </p>
         <p> 3. 文本向量化: 向量维度划分 </p>
-        <p> 4. 机器训练: 基于LIBSVM的支持向量机，核函数为RBF </p>
+        <p> 4. 机器训练: 基于 <a>LIBSVM</a> 的支持向量机，核函数为RBF </p>
         <p> 5. 情感分析 </p>
         <p> 6. 回归验证 </p>
 
@@ -33,7 +33,7 @@
         <ul class="nav nav-pills">
           <li class="active"><a href="#crawler" data-toggle="tab">抓取</a>
           </li>
-          <li><a href="#switch-pills" data-toggle="tab">分词与特征提取</a>
+          <li><a href="#spliter" data-toggle="tab">分词与特征提取</a>
           </li>
           <li><a href="#session-pills" data-toggle="tab">情感向量化</a>
           </li>
@@ -49,7 +49,11 @@
           <div class="tab-pane fade in active" id="crawler" style="margin-top:10px">
             <crawler></crawler>
           </div>
+          <div class="tab-pane fade" id="spliter" style="margin-top:10px">
+            <spliter></spliter>
+          </div>
         </div>
+
 
         </div>
       </div>

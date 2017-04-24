@@ -17,6 +17,10 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.jsonview.min.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='datatables/css/jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='datatables-plugins/dataTables.bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='datatables-responsive/dataTables.responsive.css') }}">
+
 </head>
 <body>
 
@@ -32,15 +36,18 @@
     <script src="{{ url_for('static', filename='js/md5.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.jsonview.min.js') }}"></script>
 
+    <script src="{{ url_for('static', filename='datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='datatables-plugins/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='datatables-responsive/dataTables.responsive.js') }}"></script>
+
     <script>
 
     $(document).ready(function(){
-      $('.sortable').nestedSortable({
-        handle: 'div',
-        items: 'li',
-        toleranceElement: '> div'
+      $('#dataTables-example').DataTable({
+        responsive: true
       });
     });
+
 
     $(function () { $("[data-toggle='popover']").popover({ trigger: "hover" }); });
 

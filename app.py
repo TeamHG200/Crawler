@@ -15,7 +15,10 @@ app.config.from_object('db.config.Config')
 app.db = db_tool.DB(app.config)
 
 from crawler import Crawler
-crawler = Crawler(app.config)
+cw = Crawler(app.config)
+
+from split import Spliter
+sp = Spliter(app.config)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -29,10 +32,23 @@ def reviews():
     res = app.db.fetch_review(s, n)
     for r in res:
         json_res.append({
-            'game_id' : r[0],
-            'review_id' : r[1],
-            'text' : r[2],
-            'score' : r[3]
+                'review_id' : r[0],
+                'game_id' : r[1],
+                'text' : r[2],
+                'score' : r[3]
+        })
+    return jsonify(json_res)
+
+@app.route('/words', methods=['GET'])
+def words():
+    json_res = []
+    res = app.db.fetch_words()
+    for r in res:
+        json_res.append({
+                'review_id' : r[0],
+                'game_id' : r[1],
+                'words' : json.loads(r[2]),
+                'emotion' : r[3]
         })
     return jsonify(json_res)
 
@@ -45,21 +61,27 @@ def review_count():
 
     return jsonify(json_res)
 
-@app.route('/<path>')
-def crawler(path):
-    html = "<table border=\"1\"><tbody>"
-    res = crawler.get_review(path)
+@app.route('/crawler')
+def crawler():
+    gid = request.args.get('gid', '0')
+    res = cw.get_review(gid)
+    json_res = {
+        'count' : len(res)
+    }
+    return jsonify(json_res)
+
+@app.route('/split')
+def split():
+    review_count = app.db.review_count()
+    res = app.db.fetch_review("0", str(review_count[0][0]))
     for r in res:
-        html += "<tr>"
-        html += "<td>" + r[0] + "</td>"
-        html += "<td><table border=\"1\"><tbody>"
-        for w in r[1]:
-            html += '<tr><td>'+ w[0] +'</td>'
-            html += '<td>'+ str(w[1]) +'</td></tr>'
-        html += "</tbody></table></td>"
-        html += "</tr>"
-    html += "</tbody></table>"
-    return html
+        sp.split(r[0], r[1], r[2])
+
+    json_res = {
+        'count' : len(res)
+    }
+    return jsonify(json_res)
+
 
 if __name__ == '__main__':
     reload(sys)

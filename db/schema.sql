@@ -7,6 +7,14 @@ create table if not exists svm_review (
   update_time TimeStamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ;
 
+create table if not exists svm_words (
+  review_id string primary key,
+  game_id string not null,
+  words string not null,
+  emotion_words string not null,
+  update_time TimeStamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ;
+
 create table if not exists svm_feature (
   review_id string primary key,
   game_id string not null,

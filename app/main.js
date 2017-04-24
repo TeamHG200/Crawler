@@ -12,6 +12,7 @@ var app = new Vue({
   el: "#wrapper",
   components: {
       'crawler': require('crawler.vue'),
+      'spliter': require('spliter.vue')
   },
   data () {
     return {

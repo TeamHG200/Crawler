@@ -1,35 +1,39 @@
 {
-    "name": "svm-review",
-    "version": "1.0.0",
-    "description": "svm review",
-    "main": "webpack.config.js",
-    "dependencies": {
-        "vue": "^2.1.4",
-        "vue-loader": "^7.3.0",
-        "vue-resource": "^1.0.3",
-        "vue-indicator": "*",
-        "vue-codemirror": "*",
-        "vue-router": "*",
-        "xml-viewer": "*",
-        "webpack": "^1.14.0",
-        "babel-core": "^6.1.2",
-        "babel-loader": "^6.1.0",
-        "babel-plugin-transform-runtime":"^6.1.2",
-        "babel-preset-es2015":"^6.1.2",
-        "babel-runtime":"^5.8.0",
-        "css-loader":"*",
-        "style-loader":"*",
-        "vue-hot-reload-api":"^1.2.0",
-        "vue-html-loader":"^1.0.0"
-    },
-    "devDependencies": {},
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git@gitlab.alibaba-inc.com:search-planner/sp_coder.git"
-    },
-    "author": "",
-    "license": "ISC"
+  "name": "svm-review",
+  "version": "1.0.0",
+  "description": "svm review",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "babel-core": "^6.1.2",
+    "babel-loader": "^6.1.0",
+    "babel-plugin-transform-runtime": "^6.1.2",
+    "babel-preset-es2015": "^6.1.2",
+    "babel-runtime": "^5.8.0",
+    "css-loader": "*",
+    "style-loader": "*",
+    "vue": "^2.1.4",
+    "vue-codemirror": "*",
+    "vue-datatable": "^1.0.4",
+    "vue-hot-reload-api": "^1.2.0",
+    "vue-html-loader": "^1.0.0",
+    "vue-indicator": "*",
+    "vue-loader": "^7.3.0",
+    "vue-resource": "^1.0.3",
+    "vue-router": "*",
+    "webpack": "^1.14.0",
+    "xml-viewer": "*"
+  },
+  "devDependencies": {
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.alibaba-inc.com:search-planner/sp_coder.git"
+  },
+  "author": "",
+  "license": "ISC"
 }

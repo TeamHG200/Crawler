@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os, sys
+import os, sys, re
 import urllib2
 import json
-import jieba
 import operator
 import db_tool
 
@@ -42,15 +41,11 @@ class Crawler:
                   "&l=schinese&filterLanguage=default&searchText=&forceanon=1" % ((page-1)*10, page, page, page, page, page, page, page, page, page, page, page, page, appid))
         return suffix
 
-    def check_words(self, words):
-        stat = {}
-        for w in words:
-            if w not in stat:
-                stat[w] = 1
-            else:
-                stat[w] += 1
-                sorted_words = sorted(stat.items(), key=operator.itemgetter(1), reverse=True)
-        return sorted_words[0:5]
+    def remove_html(self, html):
+        cleanr = re.compile('<.*?>')
+        cleantext = re.sub(cleanr, '', html)
+        return cleantext
+
 
     def seek_args(self, string, ids):
         res = []
@@ -61,16 +56,16 @@ class Crawler:
                 pos_s2 = string.find("</div>", pos_p)
                 pos_s3 = string.find("</div>", pos_s2+6)
                 review = string[pos_s2+6:pos_s3].strip()
+                review = self.remove_html(review)
                 self.db.update_review(ids, review)
-                words = self.check_words(list(jieba.cut(review)))
-                res.append((review,words))
             else:
                 break
+            res.append(review)
         return res
 
     def get_review(self, ids):
         res_all = []
-        for i in range(1, 10):
+        for i in range(1, 20):
             try:
                 url = base_url + ids + self.make_suffix(ids, i)
                 print(url)
