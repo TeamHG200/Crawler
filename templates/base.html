@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="shuangtian.zyh">
+
+    <title>AQUA SVM</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery-ui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/metisMenu.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sb-admin-2.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/morris.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.jsonview.min.css') }}">
+
+</head>
+<body>
+
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/metisMenu.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/raphael.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/morris.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.mjs.nestedSortable.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/md5.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.jsonview.min.js') }}"></script>
+
+    <script>
+
+    $(document).ready(function(){
+      $('.sortable').nestedSortable({
+        handle: 'div',
+        items: 'li',
+        toleranceElement: '> div'
+      });
+    });
+
+    $(function () { $("[data-toggle='popover']").popover({ trigger: "hover" }); });
+
+    $('.carousel').carousel({
+        interval: 200
+    });
+
+    var resp_check = function(data) {
+        if(typeof(data) == 'string') {
+           data = JSON.parse(data)
+        }
+        if(data.error_code == undefined || data.error_code == "0") {
+           return data.data
+        }
+        else {
+           if(data.error_code != "0") {
+              alert("错误:" + data.error_message)
+           }
+           return false
+        }
+    }
+
+    </script>
+
+    {% block body %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/bundle.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div id="wrapper">
+
+  <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    {% include "nav.html" %}
+  </nav>
+
+  <code_edit repo="{{ repo }}" branch="{{ branch }}" username="{{ username }}"></code_edit>
+
+  <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+{% endblock %}
