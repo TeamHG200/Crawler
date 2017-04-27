@@ -7,6 +7,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 import crawler
 import sqlite3,json
 import db_tool
+from file_tool import FileTool
 
 
 #from etc import config
@@ -19,6 +20,7 @@ cw = Crawler(app.config)
 
 from split import Spliter
 sp = Spliter(app.config)
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -81,6 +83,48 @@ def split():
         'count' : len(res)
     }
     return jsonify(json_res)
+
+
+###
+@app.route('/positive', methods=['GET', 'POST'])
+def word_page():
+
+    if request.method == 'GET':
+        response = make_response(render_template('positive.html'))
+        return response
+    elif request.method == 'POST':
+        user = UserModel(request, app.api.db)
+        response = make_response(redirect(url_for('index')))
+        app.auth = Auth(request, response)
+        app.auth.login(user)
+        app.api.new_user(user)
+        return response
+    else:
+        return redirect(url_for('index'))
+
+
+
+### FILE ###
+@app.route('/file/<path:path>', methods = ['GET', 'POST'])
+def get_file(path):
+    res = ""
+    ft = FileTool()
+    if request.method == 'GET':
+        res = ft.readFile(path)
+        return res
+    elif request.method == 'POST':
+        content = request.files.get('file')
+        if content:
+            res = ft.writeFile(path, content.read())
+        else:
+            content = request.form.get('content')
+            if content is not None:
+                res = ft.writeFile(path, content)
+        sp.wd.load() # reload
+        return "true"
+    return res
+
+
 
 
 if __name__ == '__main__':

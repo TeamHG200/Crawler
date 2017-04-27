@@ -18,7 +18,7 @@
     </div>
   </div>
   <div v-if="status == ''" class="panel-body" id="all_projects">
-    <table width="100%" class="table table-striped table-bordered table-hover">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example2">
       <thead>
         <tr>
          <th>ID</th>
@@ -32,7 +32,7 @@
           <td>{{ word.game_id }}</td>
           <td>
                <ul>
-                 <li v-for="w in word.words"> {{ w[0] }} / {{ w[1] }}</li>
+                 <li v-for="w in word.words"> {{ w[0] }}  {{ w[1] }}</li>
                </ul>
           </td>
         </tr>
@@ -60,6 +60,11 @@ export default{
         }
     },
     created:function(){
+        this.show_words()
+        setTimeout(() => {
+            $('#dataTables-example2').DataTable({
+            });
+        }, 100)
     },
     methods: {
 

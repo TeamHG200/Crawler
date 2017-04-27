@@ -40,14 +40,14 @@
         <h2 class="text-center">{{ status }}</h2>
     </div>
   </div>
-  <div v-if="status == ''" class="panel-body" id="all_projects">
+  <div v-if="status == ''" class="panel-body">
     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
       <thead>
         <tr>
          <th>ID</th>
          <th>Game</th>
          <th>Reviews</th>
-         <th width="30px">Useful</th>
+         <th>Useful</th>
         </tr>
       </thead>
       <tbody>
@@ -95,6 +95,11 @@ export default{
     },
     created:function(){
         this.reload_view()
+        setTimeout(() => {
+            $('#dataTables-example').DataTable({
+                responsive: true
+            });
+        }, 100)
     },
     methods: {
 
