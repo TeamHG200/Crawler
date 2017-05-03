@@ -27,7 +27,7 @@
 
 
   <div class="panel-heading">
-    <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 评论
+    <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 评论 {{status}}
     <button class="btn btn-success btn-circle pull-right" data-toggle="modal" data-target="#myModalNewGameReview" >
        <i class="fa fa-plus fa-fw"></i>
     </button>
@@ -35,12 +35,7 @@
 
   <!-- /.panel-heading -->
 
-  <div v-if="status !=''" class="panel-body" style="min-height:190px" id="all_projects">
-    <div class="fill">
-        <h2 class="text-center">{{ status }}</h2>
-    </div>
-  </div>
-  <div v-if="status == ''" class="panel-body">
+  <div class="panel-body">
     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
       <thead>
         <tr>
@@ -56,16 +51,16 @@
           <td>{{ review.game_id }}</td>
           <td>{{ review.text }}</td>
           <td>
-             <button v-if="review.score==0||review.score==1" class="btn btn-outline btn-primary btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评">
+             <button v-if="review.score==0||review.score==1" class="btn btn-outline btn-primary btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评" v-on:click="zan(2,review.review_id)">
                <i class="fa  fa-thumbs-o-down fa-fw"></i>
              </button>
-             <button v-if="review.score==2" class="btn btn-success btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评">
+             <button v-if="review.score==2" class="btn btn-danger btn-circle pull-right" style="margin-top:0px;margin-left:2px" data-toggle="popover" data-placement="top" data-content="差评" v-on:click="zan(0,review.review_id)">
                <i class="fa  fa-thumbs-o-down fa-fw"></i>
              </button>
-             <button v-if="review.score==0||review.score==2" class="btn btn-outline btn-primary btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评">
+             <button v-if="review.score==0||review.score==2" class="btn btn-outline btn-primary btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评" v-on:click="zan(1,review.review_id)">
                <i class="fa  fa-thumbs-o-up fa-fw"></i>
              </button>
-             <button v-if="review.score==1" class="btn btn-success btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评">
+             <button v-if="review.score==1" class="btn btn-success btn-circle pull-right" data-toggle="popover" data-placement="top" data-content="好评" v-on:click="zan(0,review.review_id)">
                <i class="fa  fa-thumbs-o-up fa-fw"></i>
              </button>
           </td>
@@ -95,11 +90,6 @@ export default{
     },
     created:function(){
         this.reload_view()
-        setTimeout(() => {
-            $('#dataTables-example').DataTable({
-                responsive: true
-            });
-        }, 100)
     },
     methods: {
 
@@ -130,6 +120,11 @@ export default{
                     if(data) {
                         this.$data.status = ""
                         this.$data.reviews = data
+                        setTimeout(() => {
+                            $('#dataTables-example').DataTable({
+                                destroy: true
+                            });
+                        }, 100)
                     }
                 },function(){
                     alert("网络不通")
@@ -145,6 +140,19 @@ export default{
                 }})
                 .then(function (resp) {
                     this.reload_view()
+                },function(){
+                    alert("网络不通")
+                })
+        },
+
+        zan:function(s, review_id) {
+            this.$http.get("/do_score",{
+                params: {
+                    review_id: review_id,
+                    score: s
+                }})
+                .then(function (resp) {
+                    this.$data.reviews[review_id-1].score = s
                 },function(){
                     alert("网络不通")
                 })

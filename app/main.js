@@ -13,6 +13,7 @@ var app = new Vue({
   components: {
       'crawler': require('crawler.vue'),
       'spliter': require('spliter.vue'),
+      'train': require('train.vue'),
       'ntusd': require('ntusd.vue')
   },
   data () {

@@ -35,12 +35,9 @@
               <a v-for="w in word.words"> {{ w }}</a>
           </td>
           <td>
-               <tbody>
-                 <tr v-for="v,k in word.emotion">
-                     <td>{{k}}</td>
-                     <td>{{v}}</td>
-                 </tr>
-               </tbody>
+               <ul>
+                 <li v-for="e in word.emotion"> {{ e }}</li>
+               </ul>
           </td>
         </tr>
       </tbody>
@@ -72,7 +69,7 @@ export default{
     methods: {
 
         show_words:function() {
-            this.$http.get("/get_split",{
+            this.$http.get("/words",{
                 params: {
                 }})
                 .then(function (resp) {
@@ -92,9 +89,9 @@ export default{
 
         },
 
-        spliter:function() {
-            this.$data.status = "正在分词提取..."
-            this.$http.get("/do_split",{
+        score:function() {
+            this.$data.status = "正在向量分析..."
+            this.$http.get("/split",{
                 params: {
                 }})
                 .then(function (resp) {

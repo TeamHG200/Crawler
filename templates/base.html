@@ -21,6 +21,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='datatables-plugins/dataTables.bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='datatables-responsive/dataTables.responsive.css') }}">
 
+
 </head>
 <body>
 
@@ -40,12 +41,14 @@
     <script src="{{ url_for('static', filename='datatables-plugins/dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='datatables-responsive/dataTables.responsive.js') }}"></script>
 
+
+    <script src="{{ url_for('static', filename='svm/libsvm-js-interfaces.js') }}"></script>
+    <script src="{{ url_for('static', filename='svm/libsvm-js-interfaces-wrapper.js') }}"></script>
+    <script src="{{ url_for('static', filename='svm/svm-toy.js') }}"></script>
+
     <script>
 
     $(document).ready(function(){
-      $('#dataTables-example').DataTable({
-        responsive: true
-      });
     });
 
 

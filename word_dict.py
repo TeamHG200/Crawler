@@ -17,18 +17,25 @@ class Word:
 
         negative1=open('ntusd/ntusd-negative.txt').readlines()
         positive1=open('ntusd/ntusd-positive.txt').readlines()
+        adj=open('ntusd/ntusd-adj.txt').readlines()
 
         self.negative = {}
         for line in negative1:
-            w = line[:-2]
+            w = line[:-1]
             w.strip()
-            self.negative[w] = -1
+            self.negative[unicode(w)] = -1
 
         self.positive = {}
         for line in positive1:
-            w = line[:-2]
+            w = line[:-1]
             w.strip()
-            self.positive[w] = 1
+            self.positive[unicode(w)] = 1
+
+        self.adj = {}
+        for line in adj:
+            w = line[:-1]
+            w.strip()
+            self.adj[unicode(w)] = 1
 
 
     def check(self,word):
@@ -37,5 +44,8 @@ class Word:
 
         if word in self.negative:
             return -1
+
+        if word in self.adj:
+            return 2
 
         return 0

@@ -1,50 +1,22 @@
 <template>
 
 <div class="panel panel-default"  name="search-planner-group">
-
-
   <div class="panel-heading">
     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 分词
-    <button class="btn btn-success btn-circle pull-right" v-on:click="spliter()">
+    <input id="param" value="-t 2 -c 100" />
+    <button class="btn btn-success btn-circle pull-right" v-on:click="show()">
        <i class="fa fa-check fa-fw"></i>
     </button>
   </div>
 
-  <!-- /.panel-heading -->
-
-  <div v-if="status !=''" class="panel-body" style="min-height:190px" id="all_projects">
-    <div class="fill">
-        <h2 class="text-center">{{ status }}</h2>
-    </div>
+  <div class="panel-body">
+    <canvas id="features" height="600" width="1130"></canvas>
   </div>
-  <div v-if="status == ''" class="panel-body" id="all_projects">
-    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example2">
-      <thead>
-        <tr>
-         <th>ID</th>
-         <th>Game</th>
-         <th>Words</th>
-         <th>Emotion</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="odd gradeX" v-for="word in words">
-          <td>{{ word.review_id }}</td>
-          <td>{{ word.game_id }}</td>
-          <td>
-              <a v-for="w in word.words"> {{ w }}</a>
-          </td>
-          <td>
-               <tbody>
-                 <tr v-for="v,k in word.emotion">
-                     <td>{{k}}</td>
-                     <td>{{v}}</td>
-                 </tr>
-               </tbody>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+  <div class="panel-footer">
+    <button id="color" onclick="nextColor()" >Change</button>
+    <button id="run" onclick="drawModel()" >Run</button>
+    <button id="clear" onclick="clearScreenAndData()" >Clear</button>
   </div>
 
 </div>
@@ -67,12 +39,19 @@ export default{
         }
     },
     created:function(){
-        this.show_words()
+
     },
     methods: {
+        show:function() {
+            init();
+            addPoint(100,200);
+            addPoint(200,100);
+            addPoint(300,300);
+            addPoint(100,200);
+        },
 
         show_words:function() {
-            this.$http.get("/get_split",{
+            this.$http.get("/words",{
                 params: {
                 }})
                 .then(function (resp) {
@@ -94,7 +73,7 @@ export default{
 
         spliter:function() {
             this.$data.status = "正在分词提取..."
-            this.$http.get("/do_split",{
+            this.$http.get("/split",{
                 params: {
                 }})
                 .then(function (resp) {

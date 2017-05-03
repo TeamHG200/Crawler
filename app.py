@@ -41,18 +41,13 @@ def reviews():
         })
     return jsonify(json_res)
 
-@app.route('/words', methods=['GET'])
-def words():
+@app.route('/do_score', methods=['GET'])
+def score():
+    rid = request.args.get('review_id')
+    score = request.args.get('score')
     json_res = []
-    res = app.db.fetch_words()
-    for r in res:
-        json_res.append({
-                'review_id' : r[0],
-                'game_id' : r[1],
-                'words' : json.loads(r[2]),
-                'emotion' : r[3]
-        })
-    return jsonify(json_res)
+    res = app.db.update_review_score(rid, score)
+    return jsonify(res)
 
 @app.route('/review_count', methods=['GET'])
 def review_count():
@@ -63,7 +58,7 @@ def review_count():
 
     return jsonify(json_res)
 
-@app.route('/crawler')
+@app.route('/do_crawler')
 def crawler():
     gid = request.args.get('gid', '0')
     res = cw.get_review(gid)
@@ -72,10 +67,24 @@ def crawler():
     }
     return jsonify(json_res)
 
-@app.route('/split')
+@app.route('/get_split', methods=['GET'])
+def words():
+    json_res = []
+    res = app.db.fetch_words()
+    for r in res:
+        json_res.append({
+                'review_id' : r[0],
+                'game_id' : r[1],
+                'words' : json.loads(r[2]),
+                'emotion' : json.loads(r[3])
+        })
+    return jsonify(json_res)
+
+
+@app.route('/do_split')
 def split():
     review_count = app.db.review_count()
-    res = app.db.fetch_review("0", str(review_count[0][0]))
+    res = app.db.fetch_review_useful("0", str(review_count[0][0]))
     for r in res:
         sp.split(r[0], r[1], r[2])
 
@@ -83,6 +92,32 @@ def split():
         'count' : len(res)
     }
     return jsonify(json_res)
+
+@app.route('/get_feature')
+def get_feature():
+    json_res = []
+    res = app.db.fetch_feature()
+    for r in res:
+        json_res.append({
+                'review_id' : r[0],
+                'game_id' : r[1],
+                'feature' : json.loads(r[2]),
+                'score' : json.loads(r[3])
+        })
+
+    return jsonify(json_res)
+
+@app.route('/do_feature')
+def do_feature():
+    res = app.db.fetch_words()
+    for r in res:
+        sp.feature(r[0], r[1], json.loads(r[3]))
+
+    json_res = {
+        'count' : len(res)
+    }
+    return jsonify(json_res)
+
 
 
 ###
