@@ -83,6 +83,7 @@ def words():
 
 @app.route('/do_split')
 def split():
+    app.db.remove_words()
     review_count = app.db.review_count()
     res = app.db.fetch_review_useful("0", str(review_count[0][0]))
     for r in res:
@@ -98,17 +99,23 @@ def get_feature():
     json_res = []
     res = app.db.fetch_feature()
     for r in res:
+        useful = ""
+        is_useful = app.db.is_useful(r[0])
+        if len(is_useful) == 1:
+           useful = is_useful[0][0]
         json_res.append({
                 'review_id' : r[0],
                 'game_id' : r[1],
-                'feature' : json.loads(r[2]),
-                'score' : json.loads(r[3])
+                'feature' : r[2],
+                'score' : json.loads(r[3]),
+                'useful' : useful
         })
 
     return jsonify(json_res)
 
 @app.route('/do_feature')
 def do_feature():
+    app.db.remove_feature()
     res = app.db.fetch_words()
     for r in res:
         sp.feature(r[0], r[1], json.loads(r[3]))

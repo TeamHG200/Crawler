@@ -1,6 +1,6 @@
 var index = 0;
-var colors = ["#50A050", "#2050A0", "#A05050"];
-var answer_colors = [[127, 0, 60], [127, 127, 0],  [0, 0, 127]];
+var colors = ["#50A050", "#66FF66", "#CC6666"];
+var answer_colors = [[127, 0, 60], [255, 255, 150],  [100, 200, 255]];
 var svr_line_color = "white";
 var eps_tube_color = "blue";
 var context = null;
@@ -32,10 +32,10 @@ function drawAllPoints()
 	}
 }
 
-function addPoint(x, y)
+function addPoint(x, y, i)
 {
-	drawPoint(x, y, colors[index]);
-	train_points.push([index, x, y]);
+	drawPoint(x, y, colors[i]);
+	train_points.push([i, x, y]);
 }
 
 function init()
@@ -50,7 +50,7 @@ function init()
 		var mouseX = e.pageX - this.offsetLeft;
 		var mouseY = e.pageY - this.offsetTop;
 
-		addPoint(mouseX, mouseY);
+		addPoint(mouseX, mouseY,index);
 	};
 }
 

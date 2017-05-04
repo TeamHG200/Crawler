@@ -82,6 +82,17 @@ class DB:
         conn.close()
         return rows
 
+    def remove_words(self):
+        conn = sqlite3.connect(self.db)
+        conn.text_factory = str
+        cursor = conn.cursor()
+        cursor.execute('delete from svm_words')
+        rowcount = cursor.rowcount
+        cursor.close()
+        conn.commit()
+        conn.close()
+        return rowcount
+
     def fetch_feature(self):
         conn = sqlite3.connect(self.db)
         conn.text_factory = str
@@ -92,6 +103,7 @@ class DB:
         conn.commit()
         conn.close()
         return rows
+
 
     def update_feature(self, review_id, game_id, feature, feature_score):
         conn = sqlite3.connect(self.db)
@@ -104,3 +116,25 @@ class DB:
         conn.commit()
         conn.close()
         return rowcount
+
+    def remove_feature(self):
+        conn = sqlite3.connect(self.db)
+        conn.text_factory = str
+        cursor = conn.cursor()
+        cursor.execute('delete from svm_feature')
+        rowcount = cursor.rowcount
+        cursor.close()
+        conn.commit()
+        conn.close()
+        return rowcount
+
+    def is_useful(self, review_id):
+        conn = sqlite3.connect(self.db)
+        conn.text_factory = str
+        cursor = conn.cursor()
+        cursor.execute('select score from svm_review where review_id = ?', (review_id,))
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        return rows

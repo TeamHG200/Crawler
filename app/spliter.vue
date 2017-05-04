@@ -24,7 +24,7 @@
          <th>ID</th>
          <th>Game</th>
          <th>Words</th>
-         <th>Emotion</th>
+         <th width="150">Emotion</th>
         </tr>
       </thead>
       <tbody>

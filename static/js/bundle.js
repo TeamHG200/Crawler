@@ -60,8 +60,9 @@
 	  components: {
 	    'crawler': __webpack_require__(311),
 	    'spliter': __webpack_require__(314),
-	    'train': __webpack_require__(317),
-	    'ntusd': __webpack_require__(320)
+	    'score': __webpack_require__(317),
+	    'train': __webpack_require__(320),
+	    'ntusd': __webpack_require__(323)
 	  },
 	  data: function data() {
 	    return {
@@ -66473,7 +66474,7 @@
 	//          <th>ID</th>
 	//          <th>Game</th>
 	//          <th>Words</th>
-	//          <th>Emotion</th>
+	//          <th width="150">Emotion</th>
 	//         </tr>
 	//       </thead>
 	//       <tbody>
@@ -66559,7 +66560,7 @@
 /* 316 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n\n\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 分词\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"spliter()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <!-- /.panel-heading -->\n\n  <div v-if=\"status !=''\" class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n    <div class=\"fill\">\n        <h2 class=\"text-center\">{{ status }}</h2>\n    </div>\n  </div>\n  <div v-if=\"status == ''\" class=\"panel-body\" id=\"all_projects\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example2\">\n      <thead>\n        <tr>\n         <th>ID</th>\n         <th>Game</th>\n         <th>Words</th>\n         <th>Emotion</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\" v-for=\"word in words\">\n          <td>{{ word.review_id }}</td>\n          <td>{{ word.game_id }}</td>\n          <td>\n              <a v-for=\"w in word.words\"> {{ w }}</a>\n          </td>\n          <td>\n               <tbody>\n                 <tr v-for=\"v,k in word.emotion\">\n                     <td>{{k}}</td>\n                     <td>{{v}}</td>\n                 </tr>\n               </tbody>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n\n\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 分词\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"spliter()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <!-- /.panel-heading -->\n\n  <div v-if=\"status !=''\" class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n    <div class=\"fill\">\n        <h2 class=\"text-center\">{{ status }}</h2>\n    </div>\n  </div>\n  <div v-if=\"status == ''\" class=\"panel-body\" id=\"all_projects\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example2\">\n      <thead>\n        <tr>\n         <th>ID</th>\n         <th>Game</th>\n         <th>Words</th>\n         <th width=\"150\">Emotion</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\" v-for=\"word in words\">\n          <td>{{ word.review_id }}</td>\n          <td>{{ word.game_id }}</td>\n          <td>\n              <a v-for=\"w in word.words\"> {{ w }}</a>\n          </td>\n          <td>\n               <tbody>\n                 <tr v-for=\"v,k in word.emotion\">\n                     <td>{{k}}</td>\n                     <td>{{v}}</td>\n                 </tr>\n               </tbody>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
 
 /***/ },
 /* 317 */
@@ -66575,7 +66576,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "/Users/zen/Workspace/src/crawler/app/train.vue"
+	  var id = "/Users/zen/Workspace/src/crawler/app/score.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -66595,8 +66596,160 @@
 	// <template>
 	//
 	// <div class="panel panel-default"  name="search-planner-group">
+	//
+	//
 	//   <div class="panel-heading">
-	//     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 分词
+	//     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 向量化
+	//     <button class="btn btn-success btn-circle pull-right" v-on:click="score()">
+	//        <i class="fa fa-check fa-fw"></i>
+	//     </button>
+	//   </div>
+	//
+	//   <!-- /.panel-heading -->
+	//
+	//   <div v-if="status !=''" class="panel-body" style="min-height:190px" id="all_projects">
+	//     <div class="fill">
+	//         <h2 class="text-center">{{ status }}</h2>
+	//     </div>
+	//   </div>
+	//   <div v-if="status == ''" class="panel-body" id="all_projects">
+	//     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example3">
+	//       <thead>
+	//         <tr>
+	//          <th>ID</th>
+	//          <th>Game</th>
+	//          <th>Score</th>
+	//          <th>Useful</th>
+	//         </tr>
+	//       </thead>
+	//       <tbody>
+	//         <tr class="odd gradeX" v-for="f in feature">
+	//           <td>{{ f.review_id }}</td>
+	//           <td>{{ f.game_id }}</td>
+	//           <td>
+	//                <tbody>
+	//                  <tr>
+	//                      <td> 主观情感分 </td>
+	//                      <td> {{f.score["1"]}} </td>
+	//                  </tr>
+	//                  <tr>
+	//                      <td> 客观情感分 </td>
+	//                      <td> {{f.score["2"]}} </td>
+	//                  </tr>
+	//                </tbody>
+	//           </td>
+	//           <td v-if="f.useful == 1">
+	//               <a>好评</a>
+	//           </td>
+	//           <td v-if="f.useful == 2">
+	//               <a>差评</a>
+	//           </td>
+	//         </tr>
+	//       </tbody>
+	//     </table>
+	//   </div>
+	//
+	// </div>
+	//
+	// </template>
+	//
+	// <script>
+
+	exports.default = {
+	    props: {
+	        user: String
+	    },
+	    data: function data() {
+	        return {
+	            feature: [],
+	            game_id: "",
+	            status: "",
+	            review_count: 0,
+	            pages: []
+	        };
+	    },
+	    created: function created() {
+	        this.show_feature();
+	    },
+	    methods: {
+
+	        show_feature: function show_feature() {
+	            this.$http.get("/get_feature", {
+	                params: {} }).then(function (resp) {
+	                var data = resp.data;
+	                if (data) {
+	                    this.$data.status = "";
+	                    this.$data.feature = data;
+	                    setTimeout(function () {
+	                        $('#dataTables-example3').DataTable({
+	                            destroy: true
+	                        });
+	                    }, 100);
+	                }
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        },
+
+	        score: function score() {
+	            this.$data.status = "正在向量分析...";
+	            this.$http.get("/do_feature", {
+	                params: {} }).then(function (resp) {
+	                this.show_feature();
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        }
+
+	    }
+
+	};
+
+	// </script>
+	//
+
+/***/ },
+/* 319 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n\n\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 向量化\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"score()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <!-- /.panel-heading -->\n\n  <div v-if=\"status !=''\" class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n    <div class=\"fill\">\n        <h2 class=\"text-center\">{{ status }}</h2>\n    </div>\n  </div>\n  <div v-if=\"status == ''\" class=\"panel-body\" id=\"all_projects\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\" id=\"dataTables-example3\">\n      <thead>\n        <tr>\n         <th>ID</th>\n         <th>Game</th>\n         <th>Score</th>\n         <th>Useful</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\" v-for=\"f in feature\">\n          <td>{{ f.review_id }}</td>\n          <td>{{ f.game_id }}</td>\n          <td>\n               <tbody>\n                 <tr>\n                     <td> 主观情感分 </td>\n                     <td> {{f.score[\"1\"]}} </td>\n                 </tr>\n                 <tr>\n                     <td> 客观情感分 </td>\n                     <td> {{f.score[\"2\"]}} </td>\n                 </tr>\n               </tbody>\n          </td>\n          <td v-if=\"f.useful == 1\">\n              <a>好评</a>\n          </td>\n          <td v-if=\"f.useful == 2\">\n              <a>差评</a>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
+
+/***/ },
+/* 320 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	__vue_script__ = __webpack_require__(321)
+	__vue_template__ = __webpack_require__(322)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), true)
+	  if (!hotAPI.compatible) return
+	  var id = "/Users/zen/Workspace/src/crawler/app/train.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 321 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	// <template>
+	//
+	// <div class="panel panel-default"  name="search-planner-group">
+	//   <div class="panel-heading">
+	//     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> SVM参数
 	//     <input id="param" value="-t 2 -c 100" />
 	//     <button class="btn btn-success btn-circle pull-right" v-on:click="show()">
 	//        <i class="fa fa-check fa-fw"></i>
@@ -66625,46 +66778,32 @@
 	    },
 	    data: function data() {
 	        return {
-	            words: [],
-	            game_id: "",
-	            status: "",
-	            review_count: 0,
-	            pages: []
+	            feature: []
 	        };
 	    },
-	    created: function created() {},
+	    created: function created() {
+	        this.show_feature();
+	    },
 	    methods: {
 	        show: function show() {
 	            init();
-	            addPoint(100, 200);
-	            addPoint(200, 100);
-	            addPoint(300, 300);
-	            addPoint(100, 200);
+	            for (var f in this.$data.feature) {
+	                var score = this.$data.feature[f];
+	                var score2 = 600 - score.score["2"] * 10;
+	                var score1 = score.score["1"] * 15;
+	                var useful = score.useful;
+	                addPoint(score1, score2, useful);
+	            }
 	        },
 
-	        show_words: function show_words() {
-	            this.$http.get("/words", {
+	        show_feature: function show_feature() {
+	            this.$http.get("/get_feature", {
 	                params: {} }).then(function (resp) {
 	                var data = resp.data;
 	                if (data) {
 	                    this.$data.status = "";
-	                    this.$data.words = data;
-	                    setTimeout(function () {
-	                        $('#dataTables-example2').DataTable({
-	                            destroy: true
-	                        });
-	                    }, 100);
+	                    this.$data.feature = data;
 	                }
-	            }, function () {
-	                alert("网络不通");
-	            });
-	        },
-
-	        spliter: function spliter() {
-	            this.$data.status = "正在分词提取...";
-	            this.$http.get("/split", {
-	                params: {} }).then(function (resp) {
-	                this.show_words();
 	            }, function () {
 	                alert("网络不通");
 	            });
@@ -66678,18 +66817,18 @@
 	//
 
 /***/ },
-/* 319 */
+/* 322 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 分词\n    <input id=\"param\" value=\"-t 2 -c 100\" />\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"show()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <div class=\"panel-body\">\n    <canvas id=\"features\" height=\"600\" width=\"1130\"></canvas>\n  </div>\n\n  <div class=\"panel-footer\">\n    <button id=\"color\" onclick=\"nextColor()\" >Change</button>\n    <button id=\"run\" onclick=\"drawModel()\" >Run</button>\n    <button id=\"clear\" onclick=\"clearScreenAndData()\" >Clear</button>\n  </div>\n\n</div>\n\n";
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> SVM参数\n    <input id=\"param\" value=\"-t 2 -c 100\" />\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"show()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <div class=\"panel-body\">\n    <canvas id=\"features\" height=\"600\" width=\"1130\"></canvas>\n  </div>\n\n  <div class=\"panel-footer\">\n    <button id=\"color\" onclick=\"nextColor()\" >Change</button>\n    <button id=\"run\" onclick=\"drawModel()\" >Run</button>\n    <button id=\"clear\" onclick=\"clearScreenAndData()\" >Clear</button>\n  </div>\n\n</div>\n\n";
 
 /***/ },
-/* 320 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
-	__vue_script__ = __webpack_require__(321)
-	__vue_template__ = __webpack_require__(322)
+	__vue_script__ = __webpack_require__(324)
+	__vue_template__ = __webpack_require__(325)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
@@ -66706,7 +66845,7 @@
 	})()}
 
 /***/ },
-/* 321 */
+/* 324 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -66851,7 +66990,7 @@
 	//
 
 /***/ },
-/* 322 */
+/* 325 */
 /***/ function(module, exports) {
 
 	module.exports = "\n\n\n<div class=\"row\" style=\"margin-top:10px\">\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 正向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-positive.txt', positive)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"positive\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 负向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-negative.txt', negative)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"negative\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 程度词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adj.txt', adj)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adj\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 转意词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adv.txt', adv)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adv\"></textarea>\n        </div>\n      </div>\n    </div>\n\n\n</div>\n\n";

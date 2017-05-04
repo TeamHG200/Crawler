@@ -48,14 +48,24 @@ class Spliter:
                 continue
 
             score = self.wd.check(w)
-            if not score == 0:
-                if last_score == 2:
-                    self.add_score(emotion_word, '('+last+')'+w, score*5)
-                elif not score == 2:
+            if score != 0:
+                if last_score >= 2 or last_score <= -2:
+                    print(last, last_score)
+                    if score == 2 or score == -2:
+                        last_score = score * last_score
+                        last = '(' + last + ')' + w
+                    else:
+                        self.add_score(emotion_word, '('+last+')'+w, score*last_score)
+                        last = w
+                        last_score = score
+                elif not last_score == 2 and not last_score == -2:
                     self.add_score(emotion_word, w, score)
+                    last = w
+                    last_score = score
+            else:
+                last = w
+                last_score = 0
 
-            last = w
-            last_score = score
             stat.append(w)
 
         return stat, emotion_word
@@ -78,4 +88,9 @@ class Spliter:
                 scores1 += score
 
         scores2 = scores1*0.5
-        print(review_id, scores1, scores2)
+        feature = {
+            "1": scores1,
+            "2": scores2
+        }
+
+        self.db.update_feature(review_id, game_id, "", json.dumps(feature))
