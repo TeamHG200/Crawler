@@ -134,7 +134,7 @@ export default{
 
         crawler:function() {
             this.$data.status = "正在抓取中..."
-            this.$http.get("/crawler",{
+            this.$http.get("/do_crawler",{
                 params: {
                     gid: this.$data.game_id
                 }})
