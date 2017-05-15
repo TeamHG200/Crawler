@@ -115,10 +115,32 @@ def get_feature():
 
 @app.route('/do_feature')
 def do_feature():
+    minium = 0
+    maxium = 0
+    scores = {}
     app.db.remove_feature()
     res = app.db.fetch_words()
     for r in res:
-        sp.feature(r[0], r[1], json.loads(r[3]))
+        score1, scores2 = sp.feature(r[0], r[1], json.loads(r[3]))
+
+        if score1 < minium:
+            minium = score1
+
+        if score1 > maxium:
+            maxium = score1
+
+        scores[r[0]] = [r[1], score1]
+
+
+    for r in scores.keys():
+        score = scores[r][1]
+        score = float(score-minium)/float(maxium-minium)*1130
+        print(r, scores[r][0], score, minium, maxium)
+        app.db.update_feature(r, scores[r][1], "", json.dumps({
+            "1":score,
+            "2":score/2
+        }))
+
 
     json_res = {
         'count' : len(res)
@@ -188,5 +210,5 @@ if __name__ == '__main__':
         ip = socket.gethostbyname(hostname)
     except Exception, e:
         ip = "127.0.0.1"
-    print(ip)
-    app.run(host = '121.43.56.115', port = app.config['PORT'], debug=True)
+    #ip="121.43.56.115"
+    app.run(host = ip, port = app.config['PORT'], debug=True)

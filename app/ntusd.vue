@@ -7,7 +7,7 @@
       <div class="panel panel-default"  name="search-planner-group">
         <div class="panel-heading">
           <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 正向情感
-            <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-positive.txt', positive)">
+            <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-positive-extend.txt', positive)">
               <i class="fa fa-check fa-fw"></i>
             </button>
         </div>
@@ -21,7 +21,7 @@
       <div class="panel panel-default"  name="search-planner-group">
         <div class="panel-heading">
           <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 负向情感
-            <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-negative.txt', negative)">
+            <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-negative-extend.txt', negative)">
               <i class="fa fa-check fa-fw"></i>
             </button>
         </div>
@@ -87,7 +87,7 @@ export default{
     methods: {
 
         show_positive:function() {
-            this.$http.get("/file/ntusd/ntusd-positive.txt",{
+            this.$http.get("/file/ntusd/ntusd-positive-extend.txt",{
                 params: {
                 }})
                 .then(function (resp) {
@@ -99,7 +99,7 @@ export default{
         },
 
         show_negative:function() {
-            this.$http.get("/file/ntusd/ntusd-negative.txt",{
+            this.$http.get("/file/ntusd/ntusd-negative-extend.txt",{
                 params: {
                 }})
                 .then(function (resp) {

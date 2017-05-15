@@ -66862,7 +66862,7 @@
 	//       <div class="panel panel-default"  name="search-planner-group">
 	//         <div class="panel-heading">
 	//           <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 正向情感
-	//             <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-positive.txt', positive)">
+	//             <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-positive-extend.txt', positive)">
 	//               <i class="fa fa-check fa-fw"></i>
 	//             </button>
 	//         </div>
@@ -66876,7 +66876,7 @@
 	//       <div class="panel panel-default"  name="search-planner-group">
 	//         <div class="panel-heading">
 	//           <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 负向情感
-	//             <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-negative.txt', negative)">
+	//             <button class="btn btn-success btn-circle pull-right" v-on:click="set_word('/file/ntusd/ntusd-negative-extend.txt', negative)">
 	//               <i class="fa fa-check fa-fw"></i>
 	//             </button>
 	//         </div>
@@ -66942,7 +66942,7 @@
 	    methods: {
 
 	        show_positive: function show_positive() {
-	            this.$http.get("/file/ntusd/ntusd-positive.txt", {
+	            this.$http.get("/file/ntusd/ntusd-positive-extend.txt", {
 	                params: {} }).then(function (resp) {
 	                this.$data.positive = resp.data;
 	            }, function () {
@@ -66951,7 +66951,7 @@
 	        },
 
 	        show_negative: function show_negative() {
-	            this.$http.get("/file/ntusd/ntusd-negative.txt", {
+	            this.$http.get("/file/ntusd/ntusd-negative-extend.txt", {
 	                params: {} }).then(function (resp) {
 	                this.$data.negative = resp.data;
 	            }, function () {
@@ -66993,7 +66993,7 @@
 /* 325 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n\n<div class=\"row\" style=\"margin-top:10px\">\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 正向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-positive.txt', positive)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"positive\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 负向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-negative.txt', negative)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"negative\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 程度词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adj.txt', adj)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adj\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 转意词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adv.txt', adv)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adv\"></textarea>\n        </div>\n      </div>\n    </div>\n\n\n</div>\n\n";
+	module.exports = "\n\n\n<div class=\"row\" style=\"margin-top:10px\">\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 正向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-positive-extend.txt', positive)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"positive\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 负向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-negative-extend.txt', negative)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"negative\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 程度词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adj.txt', adj)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adj\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 转意词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adv.txt', adv)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adv\"></textarea>\n        </div>\n      </div>\n    </div>\n\n\n</div>\n\n";
 
 /***/ }
 /******/ ]);
