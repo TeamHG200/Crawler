@@ -188,5 +188,5 @@ if __name__ == '__main__':
         ip = socket.gethostbyname(hostname)
     except Exception, e:
         ip = "127.0.0.1"
-
-    app.run(host = ip, port = app.config['PORT'], debug=True)
+    print(ip)
+    app.run(host = '121.43.56.115', port = app.config['PORT'], debug=True)
