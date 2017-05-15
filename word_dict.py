@@ -21,16 +21,17 @@ class Word:
         adv=open('ntusd/ntusd-adv.txt').readlines()
 
         self.negative = {}
-        for line in negative1:
-            w = line[:-1]
-            w.strip()
-            self.negative[unicode(w)] = -1
 
         self.positive = {}
         for line in positive1:
             w = line[:-1]
             w.strip()
             self.positive[unicode(w)] = 1
+
+        for line in negative1:
+            w = line[:-1]
+            w.strip()
+            self.negative[unicode(w)] = -1
 
         self.adj = {}
         for line in adj:
