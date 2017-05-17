@@ -6,6 +6,7 @@ import urllib2
 import json
 import jieba
 import operator
+import random
 import db_tool
 import jieba
 from word_dict import Word
@@ -87,11 +88,11 @@ class Spliter:
             else:
                 scores1 += score
 
-        scores2 = scores1*0.5
+        scores2 = scores1*random.uniform(0.1,0.9)
         feature = {
             "1": scores1,
             "2": scores2
         }
+        #self.db.update_feature(review_id, game_id, "", json.dumps(feature))
 
-        self.db.update_feature(review_id, game_id, "", json.dumps(feature))
         return scores1, scores2

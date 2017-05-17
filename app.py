@@ -115,32 +115,44 @@ def get_feature():
 
 @app.route('/do_feature')
 def do_feature():
-    minium = 0
-    maxium = 0
+
+    minium_x = 0
+    maxium_x = 0
+
+    minium_y = 0
+    maxium_y = 0
+
     scores = {}
     app.db.remove_feature()
     res = app.db.fetch_words()
     for r in res:
-        score1, scores2 = sp.feature(r[0], r[1], json.loads(r[3]))
+        score1, score2 = sp.feature(r[0], r[1], json.loads(r[3]))
 
-        if score1 < minium:
-            minium = score1
+        if score1 < minium_x:
+            minium_x = score1
+        if score1 > maxium_x:
+            maxium_x = score1
 
-        if score1 > maxium:
-            maxium = score1
+        if score2 < minium_y:
+            minium_y = score2
+        if score2 > maxium_y:
+            maxium_y = score2
 
-        scores[r[0]] = [r[1], score1]
+        scores[r[0]] = [r[1], score1, score2]
 
+    scale_x = float(maxium_x-minium_x)/1130
+    scale_y = float(maxium_y-minium_y)/600
 
     for r in scores.keys():
-        score = scores[r][1]
-        score = float(score-minium)/float(maxium-minium)*1130
-        print(r, scores[r][0], score, minium, maxium)
+        score1 = scores[r][1]
+        score2 = scores[r][2]
+        score1 = float(score1-minium_x)/scale_x
+        score2 = float(score2-minium_y)/scale_y
+        print(r, scores[r][0], score1, score2)
         app.db.update_feature(r, scores[r][1], "", json.dumps({
-            "1":score,
-            "2":score/2
+            "1":score1,
+            "2":score2
         }))
-
 
     json_res = {
         'count' : len(res)
