@@ -113,6 +113,40 @@ def get_feature():
 
     return jsonify(json_res)
 
+@app.route('/do_train')
+def do_train():
+    json_res = []
+    res = app.db.fetch_feature()
+    f_train = open('feature.train.csv', 'w')
+    f_test  = open('feature.test.csv', 'w')
+    pos = len(res)*0.8
+
+    for r in res:
+        useful = ""
+        line = ""
+        is_useful = app.db.is_useful(r[0])
+        pos -= 1
+        if len(is_useful) == 1:
+            useful = is_useful[0][0]
+            score = json.loads(r[3])
+            line = str(useful) + '\t1:' + str(score['1'])  + '\t2:' + str(score['2'])
+            if pos >= 0:
+                f_train.write(line+'\n')
+            else:
+                f_test.write(line+'\n')
+
+    f_test.close()
+    f_train.close()
+
+    t = os.popen('svm-train -c 100 -t 0 feature.train.csv')
+    p = os.popen('svm-predict feature.test.csv feature.train.csv.model feature.test.predict')
+
+    return jsonify({
+        'rate' : p.read(),
+        'train_count': len(res)*0.8,
+        'test_count' : len(res)*0.2
+    })
+
 @app.route('/do_feature')
 def do_feature():
 

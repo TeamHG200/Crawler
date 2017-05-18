@@ -62,7 +62,8 @@
 	    'spliter': __webpack_require__(314),
 	    'score': __webpack_require__(317),
 	    'train': __webpack_require__(320),
-	    'ntusd': __webpack_require__(323)
+	    'ntusd': __webpack_require__(323),
+	    'check': __webpack_require__(326)
 	  },
 	  data: function data() {
 	    return {
@@ -66994,6 +66995,109 @@
 /***/ function(module, exports) {
 
 	module.exports = "\n\n\n<div class=\"row\" style=\"margin-top:10px\">\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 正向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-positive-extend.txt', positive)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"positive\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 负向情感\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-negative-extend.txt', negative)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"negative\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 程度词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adj.txt', adj)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adj\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-lg-3\">\n      <div class=\"panel panel-default\"  name=\"search-planner-group\">\n        <div class=\"panel-heading\">\n          <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 转意词\n            <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"set_word('/file/ntusd/ntusd-adv.txt', adv)\">\n              <i class=\"fa fa-check fa-fw\"></i>\n            </button>\n        </div>\n        <div class=\"panel-body\" style=\"min-height:190px\" id=\"all_projects\">\n          <textarea rows=\"30\" class=\"form-control\" v-model=\"adv\"></textarea>\n        </div>\n      </div>\n    </div>\n\n\n</div>\n\n";
+
+/***/ },
+/* 326 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	__vue_script__ = __webpack_require__(327)
+	__vue_template__ = __webpack_require__(328)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), true)
+	  if (!hotAPI.compatible) return
+	  var id = "/Users/zen/Workspace/src/crawler/app/check.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 327 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	// <template>
+	//
+	// <div class="panel panel-default"  name="search-planner-group">
+	//   <div class="panel-heading">
+	//     <i class="fa fa-gamepad fa-fw" style="margin-right:5px"></i> 检验结果
+	//     <button class="btn btn-success btn-circle pull-right" v-on:click="train()">
+	//        <i class="fa fa-check fa-fw"></i>
+	//     </button>
+	//   </div>
+	//
+	//   <div class="panel-body">
+	//     <table width="100%" class="table table-striped table-bordered table-hover">
+	//       <thead>
+	//         <tr>
+	//          <th>train count</th>
+	//          <th>test count</th>
+	//          <th>success rate</th>
+	//         </tr>
+	//       </thead>
+	//       <tbody>
+	//         <tr class="odd gradeX">
+	//           <td>{{ train_count }}</td>
+	//           <td>{{ test_count }}</td>
+	//           <td>{{ rate }}</td>
+	//         </tr>
+	//       </tbody>
+	//     </table>
+	//   </div>
+	//
+	// </div>
+	//
+	// </template>
+	//
+	// <script>
+
+	exports.default = {
+	    props: {
+	        user: String
+	    },
+	    data: function data() {
+	        return {
+	            train_count: "0",
+	            test_count: "0",
+	            rate: "0%"
+	        };
+	    },
+	    created: function created() {},
+	    methods: {
+	        train: function train() {
+	            this.$http.get("/do_train", {
+	                params: {} }).then(function (resp) {
+	                var data = resp.data;
+	                this.$data.train_count = data.train_count;
+	                this.$data.test_count = data.test_count;
+	                this.$data.rate = data.rate;
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        }
+	    }
+
+	};
+
+	// </script>
+	//
+
+/***/ },
+/* 328 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 检验结果\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"train()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <div class=\"panel-body\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\">\n      <thead>\n        <tr>\n         <th>train count</th>\n         <th>test count</th>\n         <th>success rate</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\">\n          <td>{{ train_count }}</td>\n          <td>{{ test_count }}</td>\n          <td>{{ rate }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
 
 /***/ }
 /******/ ]);

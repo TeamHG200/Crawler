@@ -15,7 +15,8 @@ var app = new Vue({
       'spliter': require('spliter.vue'),
       'score': require('score.vue'),
       'train': require('train.vue'),
-      'ntusd': require('ntusd.vue')
+      'ntusd': require('ntusd.vue'),
+      'check': require('check.vue')
   },
   data () {
     return {
