@@ -71,14 +71,23 @@ class Spliter:
         return stat, emotion_word
 
     def split(self, review_id, game_id, review):
-        words, emotions = self.check_words(list(jieba.cut(review)))
-        words_json = json.dumps(words)
-        emotions_json = json.dumps(emotions)
-        self.db.update_words(review_id, game_id, words_json, emotions_json)
+        try:
+            words, emotions = self.check_words(list(jieba.cut(review)))
+            words_json = json.dumps(words)
+            emotions_json = json.dumps(emotions)
+            self.db.update_words(review_id, game_id, words_json, emotions_json)
+        except Exception, e:
+            return
 
+    def split_batch(self, review_id, game_id, review):
+        try:
+            words, emotions = self.check_words(list(jieba.cut(review)))
+            score1, score2 = self.feature(review_id, game_id, emotions)
+            return score1, score2
+        except Exception, e:
+            return 0, 0
 
     def feature(self, review_id, game_id, words):
-
         scores1 = 0
         scores2 = 0
         for w in words.keys():

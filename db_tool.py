@@ -138,3 +138,27 @@ class DB:
         conn.commit()
         conn.close()
         return rows
+
+    def update_result(self, game_id, good, bad):
+        conn = sqlite3.connect(self.db)
+        conn.text_factory = str
+        cursor = conn.cursor()
+        rate = str(float(good)/(float(good)+float(bad))*100) + '%'
+        cursor.execute('insert or replace into svm_result (game_id, good_review, bad_review, rate) \
+                                                  values (?, ?, ?, ?)', (game_id, str(good), str(bad), str(rate)))
+        rowcount = cursor.rowcount
+        cursor.close()
+        conn.commit()
+        conn.close()
+        return rowcount
+
+    def fetch_result(self):
+        conn = sqlite3.connect(self.db)
+        conn.text_factory = str
+        cursor = conn.cursor()
+        cursor.execute('select game_id, good_review, bad_review, rate from svm_result')
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        return rows

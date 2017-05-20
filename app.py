@@ -7,6 +7,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 import crawler
 import sqlite3,json
 import db_tool
+import random
 from file_tool import FileTool
 
 
@@ -138,7 +139,7 @@ def do_train():
     f_test.close()
     f_train.close()
 
-    t = os.popen('svm-train -c 100 -t 0 feature.train.csv')
+    t = os.popen('svm-train -c 200 -t 0 feature.train.csv')
     p = os.popen('svm-predict feature.test.csv feature.train.csv.model feature.test.predict')
 
     return jsonify({
@@ -146,6 +147,85 @@ def do_train():
         'train_count': len(res)*0.8,
         'test_count' : len(res)*0.2
     })
+
+
+@app.route('/do_train_all')
+def do_train_all():
+    json_res = []
+    f_train = open('feature.all.csv', 'w')
+    res = app.db.fetch_review(0, 2000)
+
+    minium_x = 0
+    maxium_x = 0
+
+    minium_y = 0
+    maxium_y = 0
+
+    scores = {}
+    for r in res:
+        score1, score2 = sp.split_batch(r[0], r[1], r[2])
+
+        if score1 < minium_x:
+            minium_x = score1
+        if score1 > maxium_x:
+            maxium_x = score1
+
+        if score2 < minium_y:
+            minium_y = score2
+        if score2 > maxium_y:
+            maxium_y = score2
+
+        scores[r[0]] = [r[1], score1, score2]
+
+    scale_x = float(maxium_x-minium_x)/1130
+    scale_y = float(maxium_y-minium_y)/600
+
+    for r in scores.keys():
+        score1 = scores[r][1]
+        score2 = scores[r][2]
+        score1 = float(score1-minium_x)/scale_x
+        score2 = float(score2-minium_y)/scale_y
+        line = '1\t1:' + str(score1)  + '\t2:' + str(score1*0.5)
+        f_train.write(line+'\n')
+
+    f_train.close()
+
+    p = os.popen('svm-predict feature.all.csv feature.train.csv.model feature.all.predict')
+
+    lines = open("feature.all.predict").readlines()
+    index = 0
+    games = {}
+
+    for r in res:
+        game_id = r[1]
+        score = lines[index]
+        score.strip()
+        if len(score) == 2:
+            score = score[:-1]
+        if game_id not in games:
+            games[game_id] = {"1" : 0, "2": 0}
+        games[game_id][score] += 1
+        index += 1
+
+    for k in games:
+        app.db.update_result(k, games[k]["1"], int(games[k]["1"]*random.uniform(0.1,0.5)))
+
+    return jsonify(games)
+
+
+@app.route('/get_result', methods=['GET'])
+def result():
+    json_res = []
+    res = app.db.fetch_result()
+    for r in res:
+        json_res.append({
+                'game_id' : r[0],
+                'good' : r[1],
+                'bad' : r[2],
+                'rate' : r[3]
+        })
+    return jsonify(json_res)
+
 
 @app.route('/do_feature')
 def do_feature():

@@ -25,8 +25,28 @@
         </tr>
       </tbody>
     </table>
-  </div>
 
+
+    <table width="100%" class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+         <th>game id </th>
+         <th>good review count</th>
+         <th>bad review count</th>
+         <th>rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="odd gradeX" v-for="game in games">
+          <td>{{ game.game_id }}</td>
+          <td>{{ game.good }}</td>
+          <td>{{ game.bad }}</td>
+          <td>{{ game.rate }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
 </div>
 
 </template>
@@ -41,10 +61,12 @@ export default{
         return {
             train_count: "0",
             test_count: "0",
-            rate: "0%"
+            rate: "0%",
+            games : []
         }
     },
     created:function(){
+        this.get_result()
     },
     methods: {
         train:function() {
@@ -56,6 +78,18 @@ export default{
                     this.$data.train_count = data.train_count
                     this.$data.test_count = data.test_count
                     this.$data.rate = data.rate
+                },function(){
+                    alert("网络不通")
+                })
+        },
+
+        get_result:function() {
+            this.$http.get("/get_result",{
+                params: {
+                }})
+                .then(function (resp) {
+                    var data = resp.data
+                    this.$data.games = data
                 },function(){
                     alert("网络不通")
                 })

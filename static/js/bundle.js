@@ -67054,8 +67054,28 @@
 	//         </tr>
 	//       </tbody>
 	//     </table>
-	//   </div>
 	//
+	//
+	//     <table width="100%" class="table table-striped table-bordered table-hover">
+	//       <thead>
+	//         <tr>
+	//          <th>game id </th>
+	//          <th>good review count</th>
+	//          <th>bad review count</th>
+	//          <th>rate</th>
+	//         </tr>
+	//       </thead>
+	//       <tbody>
+	//         <tr class="odd gradeX" v-for="game in games">
+	//           <td>{{ game.game_id }}</td>
+	//           <td>{{ game.good }}</td>
+	//           <td>{{ game.bad }}</td>
+	//           <td>{{ game.rate }}</td>
+	//         </tr>
+	//       </tbody>
+	//     </table>
+	//
+	//   </div>
 	// </div>
 	//
 	// </template>
@@ -67070,10 +67090,13 @@
 	        return {
 	            train_count: "0",
 	            test_count: "0",
-	            rate: "0%"
+	            rate: "0%",
+	            games: []
 	        };
 	    },
-	    created: function created() {},
+	    created: function created() {
+	        this.get_result();
+	    },
 	    methods: {
 	        train: function train() {
 	            this.$http.get("/do_train", {
@@ -67082,6 +67105,16 @@
 	                this.$data.train_count = data.train_count;
 	                this.$data.test_count = data.test_count;
 	                this.$data.rate = data.rate;
+	            }, function () {
+	                alert("网络不通");
+	            });
+	        },
+
+	        get_result: function get_result() {
+	            this.$http.get("/get_result", {
+	                params: {} }).then(function (resp) {
+	                var data = resp.data;
+	                this.$data.games = data;
 	            }, function () {
 	                alert("网络不通");
 	            });
@@ -67097,7 +67130,7 @@
 /* 328 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 检验结果\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"train()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <div class=\"panel-body\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\">\n      <thead>\n        <tr>\n         <th>train count</th>\n         <th>test count</th>\n         <th>success rate</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\">\n          <td>{{ train_count }}</td>\n          <td>{{ test_count }}</td>\n          <td>{{ rate }}</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n\n</div>\n\n";
+	module.exports = "\n\n<div class=\"panel panel-default\"  name=\"search-planner-group\">\n  <div class=\"panel-heading\">\n    <i class=\"fa fa-gamepad fa-fw\" style=\"margin-right:5px\"></i> 检验结果\n    <button class=\"btn btn-success btn-circle pull-right\" v-on:click=\"train()\">\n       <i class=\"fa fa-check fa-fw\"></i>\n    </button>\n  </div>\n\n  <div class=\"panel-body\">\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\">\n      <thead>\n        <tr>\n         <th>train count</th>\n         <th>test count</th>\n         <th>success rate</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\">\n          <td>{{ train_count }}</td>\n          <td>{{ test_count }}</td>\n          <td>{{ rate }}</td>\n        </tr>\n      </tbody>\n    </table>\n\n\n    <table width=\"100%\" class=\"table table-striped table-bordered table-hover\">\n      <thead>\n        <tr>\n         <th>game id </th>\n         <th>good review count</th>\n         <th>bad review count</th>\n         <th>rate</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"odd gradeX\" v-for=\"game in games\">\n          <td>{{ game.game_id }}</td>\n          <td>{{ game.good }}</td>\n          <td>{{ game.bad }}</td>\n          <td>{{ game.rate }}</td>\n        </tr>\n      </tbody>\n    </table>\n\n  </div>\n</div>\n\n";
 
 /***/ }
 /******/ ]);
