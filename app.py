@@ -263,7 +263,7 @@ def do_feature():
         score1 = float(score1-minium_x)/scale_x
         score2 = float(score2-minium_y)/scale_y
         print(r, scores[r][0], score1, score2)
-        app.db.update_feature(r, scores[r][1], "", json.dumps({
+        app.db.update_feature(r, scores[r][0], "", json.dumps({
             "1":score1,
             "2":score2
         }))

@@ -33,7 +33,8 @@
          <th>game id </th>
          <th>good review count</th>
          <th>bad review count</th>
-         <th>rate</th>
+         <th>rate(svm)</th>
+         <th>rate(steam)</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +43,7 @@
           <td>{{ game.good }}</td>
           <td>{{ game.bad }}</td>
           <td>{{ game.rate }}</td>
+          <td>{{ game.real_rate }}</td>
         </tr>
       </tbody>
     </table>
